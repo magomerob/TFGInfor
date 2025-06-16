@@ -105,4 +105,4 @@ def extract(filename, prompt="BRUTUS:",input_dir='out-analisis' ,output_dir="mat
         with open(os.path.join(text_dir, f"{i}.txt"), "w") as text_file:
             text_file.write(outtext)
 
-        return [os.path.join(output_dir, f"{i}.npy")]
+        return [output_dir+ f"/{i}.npy"]
