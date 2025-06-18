@@ -45,7 +45,7 @@ def process_matrix(filename, inputdir = "matrices", nThresholds = 2000, threshol
     for t in thresholds:
         # Crear copia umbralizada de la matriz
         tMatrix = attn_mx.copy()
-        np.fill_diagonal(tMatrix, 0)
+        #np.fill_diagonal(tMatrix, 0)
         binarized = (tMatrix >= t).astype(int)
 
         # Crear grafo no dirigido a partir de la matriz binarizada
