@@ -18,6 +18,10 @@ def visualize_all(filepath, output_dir="visualizations-combined", figures=[True,
     
     # Preparar figura con 3 subplots en una fila
     fig, axs = plt.subplots(1, sum(figures), figsize=(18, 5))
+    
+    
+    print(min(data['euler_characteristic'].keys(), key=lambda k: abs(k - 0.03076923)))
+    
 
     # -------- Gráfico 1: Característica de Euler --------
     if(figures[0]):

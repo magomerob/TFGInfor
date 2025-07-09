@@ -33,8 +33,7 @@ def extract(filename, prompt="BRUTUS:",input_dir='out-analisis' ,output_dir="mat
 
     i = filename.split('_')[0]  # Identificador simple del fichero
     checkpoint = torch.load(os.path.join(input_dir, filename), map_location="cpu")
-    print(checkpoint['iter_num'])   
-    print(input_dir+'/'+filename)
+    iter_num = checkpoint['iter_num']
 
     # Reconstrucción del modelo desde el checkpoint
     gptconf = GPTConfig(**checkpoint['model_args'])
@@ -101,8 +100,8 @@ def extract(filename, prompt="BRUTUS:",input_dir='out-analisis' ,output_dir="mat
             return fileList
 
         # Guardado de matriz de atención final y texto generado
-        np.save(os.path.join(output_dir, f"{i}.npy"), attn_np[layer])
-        with open(os.path.join(text_dir, f"{i}.txt"), "w") as text_file:
+        np.save(os.path.join(output_dir, f"{i}_t{int(round(temperature*100)):03d}.npy"), attn_np[layer])
+        with open(os.path.join(text_dir, f"{i}_t{int(temperature*100):03d}.txt"), "w") as text_file:
             text_file.write(outtext)
 
-        return [output_dir+ f"/{i}.npy"]
+        return [output_dir+"/"+f"{i}_t{int(round(temperature*100)):03d}.npy"]

@@ -3,6 +3,7 @@ import numpy as np
 import networkx as nx
 from scipy.linalg import eigvalsh  # para espectro del Laplaciano
 from gudhi import SimplexTree, RipsComplex
+from gudhi.representations import Entropy
 import os
 
 def load_complex(filepath):
@@ -31,9 +32,13 @@ def persistence_diagram(complex_data, dimensions):
     ripsM = complex_data['ripsMatrix']
     rips = RipsComplex(distance_matrix=ripsM, max_edge_length=1.0)
     st   = rips.create_simplex_tree(max_dimension=dimensions)
-    diag = st.persistence()
+    st.compute_persistence()
+    entropys = []
+    for i in range(dimensions+1):
+        diag = st.persistence_intervals_in_dimension(i)
+        entropys.append(Entropy()(diag))
     
-    return diag
+    return (diag, entropys)
 
 def laplacian_spectra(complex_data, normalized=False):
     """Calcula el espectro del Laplaciano para cada grafo umbralizado"""
@@ -69,12 +74,13 @@ def analyze_complex(filepath, normalized_laplacian=False, outputdir="topology", 
     complex_data = load_complex(filepath)
     chi = euler_characteristic(complex_data)
     spectra = laplacian_spectra(complex_data, normalized=normalized_laplacian)
-    diagram = persistence_diagram(complex_data, dimensions)
+    diagram, entropies = persistence_diagram(complex_data, dimensions)
     
     results = {
         'euler_characteristic': chi,
         'laplacian_spectra': spectra,
-        'persistence_diagram': diagram
+        'persistence_diagram': diagram,
+        'persistent_entropies': entropies
     }
     
     filepath2 = filepath.split("/")[-1]
